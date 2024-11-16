@@ -95,6 +95,7 @@ def convert_voc2coco(input_voc_ann,output_coco_file):
         ann_root = ann_tree.getroot()
         # image_info
         img_info = get_image_info_from_root(ann_root)
+        output_json_dict['images'].append(img_info)
         img_id = img_info['id']
         # ann_infos
         for obj in ann_root.findall('object'):
@@ -111,7 +112,27 @@ def convert_voc2coco(input_voc_ann,output_coco_file):
         output_json = json.dumps(output_json_dict)
         f.write(output_json)
 
+def test(input_voc_ann,output_coco_file):
+    xml_files = get_annpathes(input_voc_ann)
+    labels, label2id = parser_label2id(xml_files)
+    for a_path in tqdm(xml_files):
+        # Read annotation xml
+        ann_tree = ET.parse(a_path)
+        ann_root = ann_tree.getroot()
+
+        num_obj = list()
+        num_class = set()
+        for obj in ann_root.findall('object'):
+            ann = get_coco_annotation_from_obj(obj, label2id)
+            num_obj.append(ann['category_id'])
+            num_class.add(ann['category_id'])
+        if len(num_class) >= 2 and len(num_obj) > len(num_class):
+            filename = osp.splitext(osp.basename(a_path))[0]
+            print(f"filename: {filename}")
+
+
 if __name__ == '__main__':
     input_voc_ann = voc_ann_path
     output_coco_file = coco_anno_file
-    convert_voc2coco(input_voc_ann, output_coco_file)
+    # convert_voc2coco(input_voc_ann, output_coco_file)
+    test(input_voc_ann, output_coco_file)

@@ -86,10 +86,7 @@ def on_key(event):
     if event.key == 'n':
         plt.close()  # 关闭当前图像，显示下一张图
 
-if __name__ == '__main__':
-    num_classes = len(categories)
-    img_id = '2009_001960'
-
+def save_heatmap_images(num_classes,img_id = '2009_001960'):
     img_info = coco.loadImgs([img_id])[0]
     ann_infos = coco.loadAnns(coco.getAnnIds(imgIds=[img_id]))
 
@@ -123,7 +120,7 @@ if __name__ == '__main__':
             plt.colorbar()  # 显示颜色条
 
             # 设置标题等
-            image_name = f"{idx}: {id2cat[cat_id]},{ct}"
+            image_name = f"{id2cat[cat_id]}:{cat_id},ann_idx: {idx},ct: {ct_int}"
             plt.title(image_name)
             plt.xlabel('X-axis')
             plt.ylabel('Y-axis')
@@ -133,3 +130,9 @@ if __name__ == '__main__':
             plt.savefig(image_path)
             # 显示图像
             plt.show()
+
+if __name__ == '__main__':
+    num_classes = len(categories)
+    img_id = '2009_001960'
+    save_heatmap_images(num_classes,img_id)
+

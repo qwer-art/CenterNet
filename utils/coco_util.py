@@ -56,9 +56,9 @@ def draw_image(img_id = '2009_001960'):
 
     fig,ax = plt.subplots()
     ax.imshow(img)
-    for ann in ann_infos:
+    for idx,ann in enumerate(ann_infos):
         ann_id = ann['category_id']
-        ann_name = id2cat[ann_id]
+        ann_name = str(idx) + ":" + id2cat[ann_id]
         bbox = ann['bbox']
         ann_color = id2color[ann_id]
         ## bbox

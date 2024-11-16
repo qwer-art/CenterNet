@@ -81,6 +81,10 @@ def draw_umich_gaussian(heatmap, center, radius, k=1):
         np.maximum(masked_heatmap, masked_gaussian * k, out=masked_heatmap)  # 逐个元素比较大小，保留大的值
     return heatmap
 
+def on_key(event):
+    """ 键盘事件处理函数，按 'n' 键跳到下一张图片 """
+    if event.key == 'n':
+        plt.close()  # 关闭当前图像，显示下一张图
 
 if __name__ == '__main__':
     num_classes = len(categories)
@@ -95,7 +99,8 @@ if __name__ == '__main__':
     print(f"heat_map: {heat_map.shape}")
 
     image_dir = osp.join(project_path,"test")
-    for ann_info in ann_infos:
+
+    for idx,ann_info in enumerate(ann_infos):
         cat_id = ann_info['category_id']
         bbox = ann_info['bbox']
         id = ann_info['id']
@@ -104,10 +109,27 @@ if __name__ == '__main__':
             radius = gaussian_radius((math.ceil(h), math.ceil(w)))
             radius = max(0, int(radius))
             ct = np.array(
-                [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2], dtype=np.float32)
+                [bbox[0] + bbox[2] / 2, bbox[1] + bbox[3] / 2], dtype=np.float32)
             ct_int = ct.astype(np.int32)
             one_htmap = draw_umich_gaussian(heat_map[cat_id],ct_int,radius)
+
             ## image_id-ann_id-cls
             image_name = ann_info['image_id'] + "-" + str(ann_info['id']) + "-" + id2cat[cat_id] + ".jpg"
             image_path = osp.join(image_dir,image_name)
-            plt.imsave(image_path,one_htmap)
+
+            # 创建一个新的图形
+            plt.figure(figsize=(6, 4))  # 设置图像的尺寸，保持原状
+            plt.imshow(one_htmap, cmap='viridis', aspect='auto', origin='upper')  # 使用热图显示矩阵
+            plt.colorbar()  # 显示颜色条
+
+            # 设置标题等
+            image_name = f"{idx}: {id2cat[cat_id]},{ct}"
+            plt.title(image_name)
+            plt.xlabel('X-axis')
+            plt.ylabel('Y-axis')
+
+            # 定义按键事件，按 'n' 继续下一张图
+            plt.gcf().canvas.mpl_connect('key_press_event', on_key)
+            plt.savefig(image_path)
+            # 显示图像
+            plt.show()

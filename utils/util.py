@@ -9,7 +9,7 @@ import re
 
 voc_path = "/home/zyt/Data/VOCdevkit"
 voc_ann_path = osp.join(voc_path,"VOC2012/Annotations")
-image_path = osp.join(voc_path,"VOC2012/JPEGImages")
+dataset_image_path = osp.join(voc_path, "VOC2012/JPEGImages")
 coco_path = "/home/zyt/Data/CocoData"
 coco_anno_file = osp.join(coco_path,"annotation.json")
 

@@ -1,8 +1,9 @@
 ./idea
-/.idea/.gitignore
-/.idea/CenterNet.iml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/inspectionProfiles/profiles_settings.xml
-/.idea/vcs.xml
 ./test
+
+/test/2009_001960.jpg
+/test/2009_001960-40130-dog.jpg
+/test/2009_001960-40131-chair.jpg
+/test/2009_001960-40132-bottle.jpg
+/test/2009_001960-40133-bottle.jpg
+/test/test_random.py

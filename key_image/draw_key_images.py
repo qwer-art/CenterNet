@@ -1,5 +1,8 @@
 import os.path as osp
 import sys
+
+import matplotlib.pyplot as plt
+
 project_path = osp.abspath(osp.join(osp.dirname(__file__),".."))
 sys.path.append(project_path)
 
@@ -27,7 +30,10 @@ def draw_ann_image(img_idx):
         ax.text(bbox[0],bbox[1],ann_name,fontsize = 12,ha='left', va='top',color='r')
 
     # img_idx,len(img_ids),img_id
-    img_name = str(img_idx) + '/' + str(get_image_size()) + "," + img_info['id'] + f",ann({len(labels)})"
+    img_name = str(img_idx) + '_' + str(get_image_size()) + "_" + img_info['id'] + f"_ann({len(labels)})"+".jpg"
+    img_path = osp.join(key_image_path,img_name)
+
+    plt.savefig(img_path)
     plt.show()
 
 # 2. transform_image

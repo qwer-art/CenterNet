@@ -45,7 +45,6 @@ def search_by_images(img_id = '2009_001960'):
     ann_infos = coco.loadAnns(ann_ids)
     for ann_id,ann_info in zip(ann_ids,ann_infos):
         print(f"ann_id: {ann_id},ann_info: {ann_info}")
-
 ## 4. draw_image
 def draw_image(img_id = '2009_001960'):
     img_info = coco.loadImgs([img_id])[0]
@@ -74,7 +73,7 @@ def draw_image(img_id = '2009_001960'):
     image_dir = osp.join(project_path,"test")
     image_name = str(img_id) + ".jpg"
     image_path = osp.join(image_dir,image_name)
-    plt.savefig(image_path)
+    # plt.savefig(image_path)
     plt.show()
 
 if __name__ == '__main__':

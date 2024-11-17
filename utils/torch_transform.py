@@ -5,7 +5,7 @@ sys.path.append(project_path)
 from utils.coco_util import *
 import numpy as np
 import torch
-import torchvision.transforms as transforms
+
 from PIL import Image
 import matplotlib.pyplot as plt
 
@@ -35,15 +35,6 @@ def test_image_transform():
     image_path = '/home/zyt/Data/VOCdevkit/VOC2012/JPEGImages/2007_000039.jpg'
     pil_image = image_path_to_pil_image(image_path)
     # 2.pil_image to tf_image
-    mean = [0.485, 0.456, 0.406]
-    std = [0.229, 0.224, 0.225]
-    transform = transforms.Compose([
-        transforms.RandomHorizontalFlip(),  # 随机水平翻转
-        transforms.ToTensor(),
-        transforms.Normalize(mean=mean, std=std),
-        transforms.Resize(512),
-        transforms.CenterCrop(512)
-    ])
     tf_image = pil_image_to_tf_image(pil_image,transform)
     # 3.norm_image to denorm image
     denorm_image = norm_image_to_denorm_image(tf_image,mean,std)

@@ -64,17 +64,8 @@ class CocoDataset(Dataset):
 
 def test_dataset():
     # 1.dataset input
-    mean = [0.485, 0.456, 0.406]
-    std = [0.229, 0.224, 0.225]
     ann_file = coco_anno_file
     img_dir = dataset_image_path
-    transform = transforms.Compose([
-        transforms.RandomHorizontalFlip(),  # 随机水平翻转
-        transforms.ToTensor(),
-        transforms.Normalize(mean=mean, std=std),
-        transforms.Resize(512),
-        transforms.CenterCrop(512)
-    ])
 
     # 创建数据集对象
     coco_dataset = CocoDataset(ann_file=ann_file, img_dir=img_dir, transform=transform)

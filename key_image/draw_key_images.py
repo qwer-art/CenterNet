@@ -7,6 +7,7 @@ project_path = osp.abspath(osp.join(osp.dirname(__file__),".."))
 sys.path.append(project_path)
 
 from utils.coco_util import *
+from utils.torch_transform import *
 key_image_path = osp.join(project_path,"key_image")
 
 # 1. ann_image
@@ -37,6 +38,11 @@ def draw_ann_image(img_idx):
     plt.show()
 
 # 2. transform_image
+def draw_transform_image(img_idx):
+    img_info = get_image_info(img_idx)
+    img, boxes, labels = get_image_infos(img_idx)
+
+
 # 3. heatmap_image
 
 if __name__ == '__main__':

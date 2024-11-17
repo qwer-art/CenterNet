@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 from typing import Dict, List
 from tqdm import tqdm
 import re
+import torchvision.transforms as transforms
 
 voc_path = "/home/zyt/Data/VOCdevkit"
 voc_ann_path = osp.join(voc_path,"VOC2012/Annotations")
@@ -14,6 +15,17 @@ coco_path = "/home/zyt/Data/CocoData"
 coco_anno_file = osp.join(coco_path,"annotation.json")
 proj_root_path = osp.abspath(osp.join(osp.dirname(__file__),".."))
 test_path = osp.join(proj_root_path,'test')
+
+mean = [0.485, 0.456, 0.406]
+std = [0.229, 0.224, 0.225]
+transform = transforms.Compose([
+    transforms.RandomHorizontalFlip(),  # 随机水平翻转
+    transforms.ToTensor(),
+    transforms.Normalize(mean=mean, std=std),
+    transforms.Resize(512),
+    transforms.CenterCrop(512)
+])
+
 
 ### get_vocxml_pathes
 def get_annpathes(directory):

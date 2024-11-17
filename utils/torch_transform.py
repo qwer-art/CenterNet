@@ -55,23 +55,7 @@ def test_image_transform():
 
 def transform_images_bboxes():
     img_idx = 150
-    # 1.img_id
-    img_ids = list(coco.imgs.keys())
-    img_id = [img_ids[img_idx]]
-    print(f"img_idx: {img_idx},img_id: {img_id}")
-    # 2.image
-    img_info = coco.loadImgs(img_id)[0]
-    img_path = os.path.join(dataset_image_path, img_info['file_name'])
-    img = Image.open(img_path).convert("RGB")
-    # 3.ann_ids
-    ann_ids = coco.getAnnIds(imgIds=img_id)
-    anns = coco.loadAnns(ann_ids)
-    boxes = []
-    labels = []
-    for ann in anns:
-        # COCO中的目标框格式是[x, y, width, height]
-        boxes.append(ann['bbox'])
-        labels.append(ann['category_id'])
+    img,boxes,labels = get_image_info(img_idx)
     boxes = torch.tensor(boxes, dtype=torch.float32)
     labels = torch.tensor(labels, dtype=torch.long)
     ########## raw image labels ##########

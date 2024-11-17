@@ -84,6 +84,26 @@ def draw_image(img_id = '2009_001960'):
     image_path = osp.join(image_dir,image_name)
     # plt.savefig(image_path)
     plt.show()
+## 5. get_image_info: img_idx
+def get_image_info(img_idx):
+    # 1.img_id
+    img_ids = list(coco.imgs.keys())
+    img_id = [img_ids[img_idx]]
+    print(f"img_idx: {img_idx},img_id: {img_id}")
+    # 2.image
+    img_info = coco.loadImgs(img_id)[0]
+    img_path = os.path.join(dataset_image_path, img_info['file_name'])
+    img = Image.open(img_path).convert("RGB")
+    # 3.ann_ids
+    ann_ids = coco.getAnnIds(imgIds=img_id)
+    anns = coco.loadAnns(ann_ids)
+    boxes = []
+    labels = []
+    for ann in anns:
+        # COCO中的目标框格式是[x, y, width, height]
+        boxes.append(ann['bbox'])
+        labels.append(ann['category_id'])
+    return img,np.array(boxes),np.array(labels)
 
 if __name__ == '__main__':
     get_global_infos()

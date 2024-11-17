@@ -14,32 +14,49 @@ import torchvision.transforms as transforms
 from PIL import Image
 import matplotlib.pyplot as plt
 
-import tkinter as tk
-
-def test_transform():
-    image_path = '/home/zyt/Data/VOCdevkit/VOC2012/JPEGImages/2007_000039.jpg'
-    # 1.pil_image
+def image_path_to_pil_image(image_path):
     image = Image.open(image_path)
-    width, height = image.size
-    print(f"pil_image: ({height}x{width}),min: {np.min(image)},max: {np.max(image)}")
+    return image
+
+def pil_image_to_tf_image(pil_image,transform):
+    tf_image = transform(pil_image)
+    return tf_image
+
+def norm_image_to_denorm_image(norm_image,mean,std):
+    mean = torch.tensor(mean).view(-1, 1, 1)  # (C, 1, 1)
+    std = torch.tensor(std).view(-1, 1, 1)  # (C, 1, 1)
+    denorm_image = norm_image * std + mean
+    return denorm_image
+
+def tensor_image_to_visual_image(tensor_image):
+    # type to int
+    visual_image = (tensor_image * 255).clamp(0, 255).byte()
+    # 转置形状从 (C, H, W) 到 (H, W, C)
+    recovered_image = np.transpose(visual_image, (1, 2, 0))  # 变为 (224, 224, 3)
+    return recovered_image
+
+def test_image_transform():
+    # 1.image_path -> image
+    image_path = '/home/zyt/Data/VOCdevkit/VOC2012/JPEGImages/2007_000039.jpg'
+    pil_image = image_path_to_pil_image(image_path)
+    # 2.pil_image to tf_image
+    mean = [0.485, 0.456, 0.406]
+    std = [0.229, 0.224, 0.225]
     transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),  # 随机水平翻转
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
+        transforms.Normalize(mean=mean, std=std),
+        transforms.Resize(512),
+        transforms.CenterCrop(512)
     ])
-    # 2.tf_image
-    transformed_image = transform(image)
-    print(f"tf_image,{transformed_image.shape},min: {transformed_image.min()},max: {transformed_image.max()}")
-    # 3.tf_image_to_pil_image
-    transformed_image_pil = transforms.ToPILImage()(transformed_image)
-    width, height = transformed_image_pil.size
-    print(f"tf_to_pil: ({height}x{width}),min:{np.min(transformed_image_pil)},max: {np.max(transformed_image_pil)}")
-    # show
-    plt.imshow(transformed_image_pil)
-    plt.axis('off')  # 不显示坐标轴
+    tf_image = pil_image_to_tf_image(pil_image,transform)
+    # 3.norm_image to denorm image
+    denorm_image = norm_image_to_denorm_image(tf_image,mean,std)
+    # 4.denorm_image to visual image
+    visual_image = tensor_image_to_visual_image(denorm_image)
+
+    plt.imshow(visual_image)
     plt.show()
 
 if __name__ == '__main__':
-    test_transform()
+    test_image_transform()

@@ -85,7 +85,18 @@ def draw_image(img_id = '2009_001960'):
     # plt.savefig(image_path)
     plt.show()
 ## 5. get_image_info: img_idx
+def get_image_size():
+    img_ids = list(coco.imgs.keys())
+    return len(img_ids)
 def get_image_info(img_idx):
+    # 1.img_id
+    img_ids = list(coco.imgs.keys())
+    img_id = [img_ids[img_idx]]
+    print(f"img_idx: {img_idx},img_id: {img_id}")
+    # 2.image info
+    img_info = coco.loadImgs(img_id)[0]
+    return img_info
+def get_image_anns(img_idx):
     # 1.img_id
     img_ids = list(coco.imgs.keys())
     img_id = [img_ids[img_idx]]
@@ -93,8 +104,17 @@ def get_image_info(img_idx):
     # 2.image
     img_info = coco.loadImgs(img_id)[0]
     img_path = os.path.join(dataset_image_path, img_info['file_name'])
-    img = Image.open(img_path).convert("RGB")
     # 3.ann_ids
+    ann_ids = coco.getAnnIds(imgIds=img_id)
+    anns = coco.loadAnns(ann_ids)
+    return anns
+def get_image_infos(img_idx):
+    # 1.img_info
+    img_info = get_image_info(img_idx)
+    img_path = os.path.join(dataset_image_path, img_info['file_name'])
+    img = Image.open(img_path).convert("RGB")
+    # 2.ann_infos
+    img_id = [img_info['id']]
     ann_ids = coco.getAnnIds(imgIds=img_id)
     anns = coco.loadAnns(ann_ids)
     boxes = []
@@ -103,7 +123,7 @@ def get_image_info(img_idx):
         # COCO中的目标框格式是[x, y, width, height]
         boxes.append(ann['bbox'])
         labels.append(ann['category_id'])
-    return img,np.array(boxes),np.array(labels)
+    return img, np.array(boxes), np.array(labels)
 
 if __name__ == '__main__':
     get_global_infos()

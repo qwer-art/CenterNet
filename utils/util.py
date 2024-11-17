@@ -12,6 +12,8 @@ voc_ann_path = osp.join(voc_path,"VOC2012/Annotations")
 dataset_image_path = osp.join(voc_path, "VOC2012/JPEGImages")
 coco_path = "/home/zyt/Data/CocoData"
 coco_anno_file = osp.join(coco_path,"annotation.json")
+proj_root_path = osp.abspath(osp.join(osp.dirname(__file__),".."))
+test_path = osp.join(proj_root_path,'test')
 
 ### get_vocxml_pathes
 def get_annpathes(directory):

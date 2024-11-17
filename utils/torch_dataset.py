@@ -33,10 +33,10 @@ class CocoDataset(Dataset):
     def __getitem__(self, idx):
         """返回一个样本（图像和目标框）"""
         # 获取图像ID
-        img_id = self.img_ids[idx]
+        img_id = [self.img_ids[idx]]
 
         # 加载图像
-        img_info = self.coco.loadImgs([img_id])[0]
+        img_info = self.coco.loadImgs(img_id)[0]
         img_path = os.path.join(self.img_dir, img_info['file_name'])
         img = Image.open(img_path).convert("RGB")
 
@@ -58,7 +58,7 @@ class CocoDataset(Dataset):
 
         # 如果有定义transform（数据增强或预处理），则应用
         if self.transform:
-            img = self.transform(img)
+            img,boxes = self.transform(img,boxes)
 
         return img, boxes, labels
 
@@ -78,8 +78,16 @@ def test_dataset():
 
     # 创建数据集对象
     coco_dataset = CocoDataset(ann_file=ann_file, img_dir=img_dir, transform=transform)
+    print(f"dataset: {len(coco_dataset)}")
 
-    print(f"len dataset: {len(coco_dataset)}")
+    # 创建DataLoader
+    data_loader = torch.utils.data.DataLoader(coco_dataset, batch_size=4, shuffle=True)
+
+    idx = 0
+    img, boxes, labels = coco_dataset[idx]
+    print(f"img: {img.shape}")
+    print(f"boxes: {boxes.shape}")
+    print(f"labels: {labels.shape}")
 
 if __name__ == '__main__':
     test_dataset()

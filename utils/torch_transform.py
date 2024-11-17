@@ -1,15 +1,10 @@
 import os.path as osp
 import sys
-
-import numpy as np
-
 project_path = osp.abspath(osp.join(osp.dirname(__file__),".."))
 sys.path.append(project_path)
 
-from pycocotools.coco import COCO
+import numpy as np
 import torch
-from torch.utils.data import Dataset
-from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 from PIL import Image
 import matplotlib.pyplot as plt

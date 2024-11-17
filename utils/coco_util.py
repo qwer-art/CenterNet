@@ -10,6 +10,15 @@ from PIL import Image
 import numpy as np
 
 coco = COCO(coco_anno_file)
+###
+# 1.ann_dict: {dict: 40138}
+# 2.catToImgs: {defaultdict: 20} {str: list(str)}
+# 3.cats: {dict: 21}
+# 4.dataset: {dict: 4}
+# 5.imgToAnns: {defaultdict: 17125}
+# 6.imgs: {dict: 17125}
+# 7.img_dir: str
+
 categories = coco.loadCats(coco.getCatIds())
 colors = plt.cm.get_cmap('Dark2', len(categories))
 cat_colors = [colors(idx) for idx in range(len(categories))]

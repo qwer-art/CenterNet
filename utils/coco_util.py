@@ -124,6 +124,21 @@ def get_image_infos(img_idx):
         boxes.append(ann['bbox'])
         labels.append(ann['category_id'])
     return img, np.array(boxes), np.array(labels)
+def get_image_wh(img_idx):
+    img_info = get_image_info(img_idx)
+    height = img_info['height']
+    width = img_info['width']
+    return [width,height]
+def get_image_objs(img_idx):
+    anns = get_image_anns(img_idx)
+    bboxs = []
+    clses = []
+    for ann in anns:
+        bbox = ann['bbox']
+        cls = ann['category_id']
+        bboxs.append(bbox)
+        clses.append(cls)
+    return bboxs,clses
 
 if __name__ == '__main__':
     get_global_infos()

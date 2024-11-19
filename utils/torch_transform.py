@@ -46,27 +46,18 @@ def test_image_transform():
 
 def transform_images_bboxes():
     img_idx = 150
-    img,boxes,labels = get_image_info(img_idx)
+    img,boxes,labels = get_image_infos(img_idx)
     boxes = torch.tensor(boxes, dtype=torch.float32)
     labels = torch.tensor(labels, dtype=torch.long)
     ########## raw image labels ##########
-    fig,ax = plt.subplots()
-    ax.imshow(img)
-    for idx,(bbox,label) in enumerate(zip(boxes,labels)):
-        ann_id = int(label)
-        ann_name = str(idx) + ":" + id2cat[ann_id]
-        ann_color = id2color[ann_id]
-        ## bbox
-        rect = patches.Rectangle(
-            (bbox[0], bbox[1]), bbox[2], bbox[3], linewidth=2, edgecolor=ann_color, facecolor='none')
-        ax.add_patch(rect)
-        ## center
-        cx, cy = bbox[0] + bbox[2] / 2.,bbox[1] + bbox[3] / 2.
-        ax.scatter(cx,cy,color=ann_color, marker='x', s=100)
-        ## txt
-        ax.text(bbox[0],bbox[1],ann_name,fontsize = 12,ha='left', va='top',color='r')
-    plt.show()
+    transformed = trans(image=img, bboxes=boxes)  # labels 是给每个框指定的标签，这里是 0
+    # 提取增强后的结果
+    transformed_img = transformed['image']  # 处理后的图像
+    transformed_bboxes = transformed['bboxes']  # 处理后的边界框
 
+    # 显示结果
+    print(f"原始边界框: {boxes}")
+    print(f"增强后的边界框: {transformed_bboxes}")
 
 if __name__ == '__main__':
     # test_image_transform()

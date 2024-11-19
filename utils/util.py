@@ -7,6 +7,7 @@ from typing import Dict, List
 from tqdm import tqdm
 import re
 import torchvision.transforms as transforms
+import albumentations as A
 
 voc_path = "/home/zyt/Data/VOCdevkit"
 voc_ann_path = osp.join(voc_path,"VOC2012/Annotations")
@@ -25,7 +26,14 @@ transform = transforms.Compose([
     transforms.Resize(512),
     transforms.CenterCrop(512)
 ])
-
+trans = A.Compose([
+        A.HorizontalFlip(p=0.5),
+        A.VerticalFlip(p=0.5),
+        A.GaussNoise(var_limit=(10.0, 50.0), p=0.5),
+        A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.2, rotate_limit=45, p=0.2),
+        # 随机应用仿射变换：平移，缩放和旋转输入
+        A.RandomBrightnessContrast(p=0.2),   # 随机明亮对比度
+    ])
 
 ### get_vocxml_pathes
 def get_annpathes(directory):

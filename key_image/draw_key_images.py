@@ -1,8 +1,5 @@
 import os.path as osp
 import sys
-
-import matplotlib.pyplot as plt
-
 project_path = osp.abspath(osp.join(osp.dirname(__file__),".."))
 sys.path.append(project_path)
 
@@ -41,10 +38,16 @@ def draw_ann_image(img_idx):
 def draw_transform_image(img_idx):
     img_info = get_image_info(img_idx)
     img, boxes, labels = get_image_infos(img_idx)
+    boxes = torch.tensor(boxes, dtype=torch.float32)
+    labels = torch.tensor(labels, dtype=torch.long)
 
+    img = transform(img)
+    boxes = transform(boxes)
+    print(f"img: {img.shape},boxes: {boxes.shape}")
 
 # 3. heatmap_image
 
 if __name__ == '__main__':
     img_idx = 150
-    draw_ann_image(img_idx)
+    # draw_ann_image(img_idx)
+    draw_transform_image(img_idx)

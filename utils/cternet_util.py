@@ -127,7 +127,7 @@ def save_heatmap_images(num_classes,img_id = '2009_001960'):
 
             # 定义按键事件，按 'n' 继续下一张图
             plt.gcf().canvas.mpl_connect('key_press_event', on_key)
-            plt.savefig(image_path)
+            # plt.savefig(image_path)
             # 显示图像
             plt.show()
 

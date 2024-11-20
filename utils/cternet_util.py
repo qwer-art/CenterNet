@@ -1,10 +1,5 @@
 import os.path as osp
 import sys
-
-import matplotlib.pyplot as plt
-
-from utils.coco_util import id2cat
-
 project_path = osp.abspath(osp.join(osp.dirname(__file__),".."))
 sys.path.append(project_path)
 from utils.coco_util import *

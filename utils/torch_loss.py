@@ -5,11 +5,13 @@ sys.path.append(project_path)
 
 from utils.coco_util import *
 from utils.util import *
+from utils.image import *
 import torch
 import torch.nn as nn
+import torch.utils.data as data
 from torchvision import models, transforms
-from PIL import Image
-import matplotlib.pyplot as plt
+import cv2
+import math
 
 class CenterNetDecoder(nn.Module):
     def __init__(self, in_channels, bn_momentum=0.1):
@@ -81,27 +83,25 @@ class CenterNetHead(nn.Module):
 
         return hm, wh, offset
 
-if __name__ == '__main__':
-    # 1. 加载预训练的 ResNet-50 模型
-    backbone = models.resnet50(pretrained=True)
+# 1. 加载预训练的 ResNet-50 模型
+backbone = models.resnet50(pretrained=True)
 
-    # 2. 去掉 ResNet-50 的全连接层（fc layer）来获得特征
-    # 这里我们通过 `torch.nn.Sequential` 保留 ResNet 中的前几层（即卷积和池化层）
-    backbone = torch.nn.Sequential(*list(backbone.children())[:-2])  # 去掉最后的全连接层
+# 2. 去掉 ResNet-50 的全连接层（fc layer）来获得特征
+# 这里我们通过 `torch.nn.Sequential` 保留 ResNet 中的前几层（即卷积和池化层）
+backbone = torch.nn.Sequential(*list(backbone.children())[:-2])  # 去掉最后的全连接层
 
-    # 3. 定义图像预处理过程
-    transform = transforms.Compose([
-        transforms.Resize(256),  # 调整图像大小
-        transforms.CenterCrop(224),  # 中心裁剪
-        transforms.ToTensor(),  # 转为张量
-        transforms.Normalize(  # 标准化
-            mean=[0.485, 0.456, 0.406],
-            std=[0.229, 0.224, 0.225]
-        )
-    ])
-    img_idx = 150
-    img,boxes,labels = get_image_infos(img_idx)
+# 3. 定义图像预处理过程
+transform = transforms.Compose([
+    transforms.Resize(256),  # 调整图像大小
+    transforms.CenterCrop(224),  # 中心裁剪
+    transforms.ToTensor(),  # 转为张量
+    transforms.Normalize(  # 标准化
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+    )
+])
 
+def pred(img):
     img_tensor = transform(img)
 
     # 增加批次维度
@@ -120,3 +120,14 @@ if __name__ == '__main__':
     head = CenterNetHead(num_classes,in_channel)
     hm, wh, offset = head(decoder_ftmap)
     print(f"hm: {hm.shape},wh: {wh.shape},offset: {offset.shape}")
+    return hm,wh,offset
+
+if __name__ == '__main__':
+    img_idx = 150
+    img,boxes,labels = get_image_infos(img_idx)
+    # pred
+    # hm, wh, offset = pred(img)
+    # label
+    img_wh = img.size
+    print(f"img_size: {img_wh}")
+

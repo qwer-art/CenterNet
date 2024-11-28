@@ -54,8 +54,8 @@ def parser_label2id(xml_files):
             # 获取 <name> 标签，即物体的类别
             label = obj.find('name').text
             labels.add(label)
-    labels = ['unknow'] + list(labels)
-    label2id = {label : idx for idx,label in enumerate(labels)}
+    labels = list(labels)
+    label2id = {label : idx  + 1 for idx,label in enumerate(labels)}
     return labels,label2id
 
 ### get_image_info
@@ -156,5 +156,5 @@ def test(input_voc_ann,output_coco_file):
 if __name__ == '__main__':
     input_voc_ann = voc_ann_path
     output_coco_file = coco_anno_file
-    # convert_voc2coco(input_voc_ann, output_coco_file)
-    test(input_voc_ann, output_coco_file)
+    convert_voc2coco(input_voc_ann, output_coco_file)
+    # test(input_voc_ann, output_coco_file)

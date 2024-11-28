@@ -139,9 +139,13 @@ def get_image_objs(img_idx):
         bboxs.append(bbox)
         clses.append(cls)
     return bboxs,clses
+def test():
+    for id,cat in zip(cat_ids,cat_names):
+        print(f"categories: {id},{cat}")
 
 if __name__ == '__main__':
-    get_global_infos()
+    # get_global_infos()
     # search_by_categories()
     # search_by_images()
-    draw_image()
+    # draw_image()
+    test()
